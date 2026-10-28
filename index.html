@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gazette du Manoir : Édition du 31 octobre (Grand-Guignol des développeurs)</title>
+  <meta name="description" content="Feuilleton interactif du 31 octobre : portraits aux yeux suiveurs, squelettes articulés en physique 2D, apothicairerie des mises en prod, cimetière du code legacy et cercueil scellé. Par Rayan Mazouni.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mazounirayan.github.io/gazette-du-manoir/">
+  <meta property="og:title" content="Gazette du Manoir : oserez-vous briser les trois chaînes du Cercueil Vermillon ?">
+  <meta property="og:description" content="Main osseuse hantée, squelettes articulés en physique 2D, orgue de théâtre Web Audio et terreurs de développeur. Signé Rayan Mazouni.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Gazette du Manoir : Édition du 31 octobre">
+  <meta name="twitter:description" content="Feuilleton interactif Grand-Guignol des développeurs par Rayan Mazouni.">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='2' width='60' height='60' fill='%23EFE9DC' stroke='%23171412' stroke-width='4'/%3E%3Cpath d='M16 28a16 16 0 1 1 32 0c0 6-3 10-6 12v10H22V40c-3-2-6-6-6-12Z' fill='%23F6F1E6' stroke='%23171412' stroke-width='3'/%3E%3Cpath d='M22 28a4 4 0 1 0 8 0a4 4 0 1 0-8 0ZM34 28a4 4 0 1 0 8 0a4 4 0 1 0-8 0Z' fill='%23B82518'/%3E%3Cpath d='M28 42v8M32 42v8M36 42v8' stroke='%23171412' stroke-width='2.5'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,700;0,6..96,900;1,6..96,700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="gate-locked">
+
+  <div id="lightning-flash" aria-hidden="true"></div>
+  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+  <canvas id="cursor-canvas" aria-hidden="true"></canvas>
+
+  <!-- ========================================================================
+       1. GRILLE ARCHITECTURALE EN FER FORGÉ (#iron-gate)
+       ======================================================================== -->
+  <div id="iron-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <div class="gate-wing left" aria-hidden="true">
+      <svg viewBox="0 0 200 600" preserveAspectRatio="none">
+        <path d="M0 24h200M0 120h200M0 480h200M0 576h200" stroke="#171412" stroke-width="12"/>
+        <path d="M28 0v600M64 0v600M100 0v600M136 0v600M172 0v600" stroke="#171412" stroke-width="9"/>
+        <!-- Piques fleurdelisées forgées -->
+        <path d="M28 0l-8 24h16ZM64 0l-8 24h16ZM100 0l-8 24h16ZM136 0l-8 24h16ZM172 0l-8 24h16Z" fill="#171412"/>
+        <!-- Volutes de ferronnerie gothique -->
+        <path d="M28 144q18 18 36 0t36 0M100 144q18 18 36 0t36 0" fill="none" stroke="#171412" stroke-width="5"/>
+        <path d="M28 456q18-18 36 0t36 0M100 456q18-18 36 0t36 0" fill="none" stroke="#171412" stroke-width="5"/>
+      </svg>
+    </div>
+    <div class="gate-wing right" aria-hidden="true">
+      <svg viewBox="0 0 200 600" preserveAspectRatio="none">
+        <path d="M0 24h200M0 120h200M0 480h200M0 576h200" stroke="#171412" stroke-width="12"/>
+        <path d="M28 0v600M64 0v600M100 0v600M136 0v600M172 0v600" stroke="#171412" stroke-width="9"/>
+        <path d="M28 0l-8 24h16ZM64 0l-8 24h16ZM100 0l-8 24h16ZM136 0l-8 24h16ZM172 0l-8 24h16Z" fill="#171412"/>
+        <path d="M28 144q18 18 36 0t36 0M100 144q18 18 36 0t36 0" fill="none" stroke="#171412" stroke-width="5"/>
+        <path d="M28 456q18-18 36 0t36 0M100 456q18-18 36 0t36 0" fill="none" stroke="#171412" stroke-width="5"/>
+      </svg>
+    </div>
+
+    <div class="gate-plaque">
+      <div class="gate-plaque-top">
+        <div id="gate-knocker" class="knocker-wrap">
+          <svg width="76" height="84" viewBox="0 0 88 98" aria-hidden="true">
+            <path d="M22 68a22 22 0 1 0 44 0a22 22 0 1 0-44 0Z" fill="none" stroke="#171412" stroke-width="8"/>
+            <path d="M22 68a22 22 0 1 0 44 0a22 22 0 1 0-44 0Z" fill="none" stroke="#BFB4A0" stroke-width="2" stroke-dasharray="5 6"/>
+            <!-- Tête de heurtoir sculptée avec arcades et suture -->
+            <path d="M19 34c0-15 11-25 25-25s25 10 25 25c0 9-4 15-9 18v12H28V52c-5-3-9-9-9-18Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.8"/>
+            <path d="M36 12q8 4 16 0M25 23l6-4M63 23l-6-4M35 53v9M44 53v9M53 53v9" stroke="#171412" stroke-width="2"/>
+            <g class="haunted-eye" data-max-move="4.2">
+              <path d="M27 34a7 7 0 1 0 14 0a7 7 0 1 0-14 0Z" fill="#171412"/>
+              <path class="haunted-pupil" d="M31.5 34a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0Z" fill="#B82518"/>
+            </g>
+            <g class="haunted-eye" data-max-move="4.2">
+              <path d="M47 34a7 7 0 1 0 14 0a7 7 0 1 0-14 0Z" fill="#171412"/>
+              <path class="haunted-pupil" d="M51.5 34a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0Z" fill="#B82518"/>
+            </g>
+            <path d="M44 41l-3.5 7h7Z" fill="#171412"/>
+          </svg>
+        </div>
+        <div class="gate-meta">
+          <strong>Feuilleton du 31 octobre</strong>
+          Grand-Guignol des développeurs
+        </div>
+      </div>
+
+      <h2 id="gate-title">Gazette du Manoir</h2>
+      <p>
+        Chutes d’ossements, regards inquisiteurs et terreurs de production.
+      </p>
+
+      <div class="gate-actions">
+        <button type="button" id="btn-enter-sound" class="btn-primary">
+          Frapper au heurtoir (son et orgue)
+        </button>
+        <button type="button" id="btn-enter-mute" class="btn-secondary">
+          Entrer sans bruit (open-space)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. SQUELETTE PENDU AU DÉFILEMENT (#hanging-skeleton)
+       ======================================================================== -->
+  <div id="hanging-skeleton" class="clickable-trap" role="button" tabindex="0" aria-label="Squelette suspendu, cliquer pour le décrocher">
+    <div class="spider-thread"></div>
+    <div class="hanging-body">
+      <svg width="76" height="92" viewBox="0 0 86 106" aria-hidden="true">
+        <path d="M26 48L10 24M60 48L76 24M43 40v34M37 74L28 98M49 74L58 98" stroke="#171412" stroke-width="6.5" stroke-linecap="round"/>
+        <path d="M26 48L10 24M60 48L76 24M43 40v34M37 74L28 98M49 74L58 98" stroke="#F6F1E6" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M30 50q13 5 26 0M32 59q11 4 22 0M34 67q9 3 18 0" stroke="#171412" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M30 50q13 5 26 0M32 59q11 4 22 0M34 67q9 3 18 0" stroke="#F6F1E6" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M28 22a15 15 0 1 1 30 0c0 5-2.5 8.5-5.5 10.5V40h-19v-7.5C30.5 30.5 28 27 28 22Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.4"/>
+        <path d="M33 22a4 4 0 1 0 8 0a4 4 0 1 0-8 0ZM45 22a4 4 0 1 0 8 0a4 4 0 1 0-8 0Z" fill="#171412"/>
+        <path d="M35.5 22a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0-3 0ZM47.5 22a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0-3 0Z" fill="#B82518"/>
+      </svg>
+      <div class="hanging-bubble">
+        <span id="hanging-skeleton-msg">Halte-là : un console.log(« ici ») traîne en production.</span>
+        <span class="hanging-dismiss">Couper le fil</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       3. TÉTIÈRE DE GAZETTE STICKY (#spooky-hud)
+       ======================================================================== -->
+  <header id="spooky-hud">
+    <div class="hud-inner">
+      <a href="#zone-entree" class="hud-brand">
+        <span class="hud-brand-title">Gazette du Manoir</span>
+      </a>
+
+      <div class="hud-stats" aria-live="polite">
+        <span class="hud-stat"><b id="stat-bones">0</b> ossements</span>
+        <span class="hud-stat"><b id="stat-scares">0</b> frayeurs</span>
+      </div>
+
+      <div class="hud-controls">
+        <button type="button" id="btn-toggle-candle" class="hud-btn btn-candle" aria-pressed="false" title="Allumer la chandelle (touche C)">
+          Veillée : chandelle
+        </button>
+        <button type="button" id="btn-toggle-mouse" class="hud-btn btn-mouse is-active" aria-pressed="true" title="Activer ou calmer la main hantée (touche M)">
+          Souris : hantée
+        </button>
+        <button type="button" id="btn-rain-skeletons" class="hud-btn btn-rain">
+          Lâcher les squelettes
+        </button>
+        <button type="button" id="btn-sweep-bones" class="hud-btn" title="Balayer les ossements au sol">
+          Balayer
+        </button>
+        <button type="button" id="btn-toggle-organ" class="hud-btn" aria-pressed="false">
+          Orgue : arrêt
+        </button>
+        <button type="button" id="btn-toggle-mute" class="hud-btn" aria-pressed="false">
+          Son : actif
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       4. PARCOURS ÉDITORIAL EN QUATRE ACTES
+       ======================================================================== -->
+  <main>
+    <div class="broadsheet-wrap">
+
+      <!-- MANCHETTE DE PRESSE HISTORIQUE -->
+      <div class="broadsheet-dateline">
+        <span>Quatrième année, registre n° 31</span>
+        <span>Paris, veillée du 31 octobre</span>
+        <span class="dateline-price">Prix : une âme (ou un merge sans conflit)</span>
+      </div>
+
+      <!-- ACTE I : LE GRAND VESTIBULE -->
+      <section id="zone-entree" aria-labelledby="title-zone-1">
+        <div class="entree-grid">
+          <div class="hero-copy">
+            <div class="chandelier-bar">
+              <button type="button" id="bone-chandelier" title="Secouer le lustre en fer forgé">
+                <svg width="68" height="36" viewBox="0 0 136 72" aria-hidden="true">
+                  <path d="M68 0v22M20 46q48-24 96 0M36 42q32 16 64 0" fill="none" stroke="#171412" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M16 28h8v16h-8ZM64 14h8v16h-8ZM112 28h8v16h-8Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.2"/>
+                  <path d="M20 16c3 4 3 9 0 11c-3-2-3-7 0-11ZM68 2c3 4 3 9 0 11c-3-2-3-7 0-11ZM116 16c3 4 3 9 0 11c-3-2-3-7 0-11Z" fill="#B82518"/>
+                  <path d="M40 54a7 7 0 1 0 14 0a7 7 0 1 0-14 0ZM82 54a7 7 0 1 0 14 0a7 7 0 1 0-14 0Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.2"/>
+                </svg>
+                <span>Secouer le lustre aux ossements</span>
+              </button>
+              <span class="hero-rubric">Premier fait divers</span>
+            </div>
+
+            <h1 id="title-zone-1">Le Grand-Guignol des développeurs</h1>
+            <p class="hero-lead">
+              Portraits vivants, squelettes en chute libre et terreurs de production.
+            </p>
+
+            <div class="hero-cta-row">
+              <button type="button" id="btn-hero-rain" class="btn-primary">
+                Décrocher une pluie d’os
+              </button>
+              <a href="#zone-chaudron" class="btn-secondary">
+                Consulter l’apothicairerie
+              </a>
+            </div>
+
+            <p class="secret-ink">
+              Note : allumez la chandelle pour révéler l’encre secrète.
+            </p>
+          </div>
+
+          <div class="entree-stage">
+            <div id="ancestor-portrait" class="portrait-frame collider-box clickable-trap" role="button" tabindex="0" aria-label="Portrait gravé du Comte Legacy, cliquer pour l’interpeller">
+              <div class="portrait-toolbar">
+                <span>Planche I : L’Aïeul</span>
+                <button type="button" id="blood-moon">Coup de tonnerre</button>
+              </div>
+
+              <div class="portrait-canvas-box">
+                <svg viewBox="0 0 280 188" aria-hidden="true">
+                  <rect width="280" height="188" fill="#E3DAC8"/>
+                  <!-- Fond de gravure à l'eau-forte : hachures et fenêtre gothique -->
+                  <path d="M0 18h280M0 36h280M0 54h280M0 72h280M0 90h280M0 108h280M0 126h280M0 144h280M0 162h280M0 180h280" stroke="#BFB4A0" stroke-width="1"/>
+                  <path d="M210 18c0 32 18 52 18 52s18-20 18-52Z" fill="#171412"/>
+                  <path d="M214 36a14 14 0 1 0 28 0a14 14 0 1 0-28 0Z" fill="#B82518"/>
+                  <path d="M222 32a10 10 0 1 0 20 0a10 10 0 1 0-20 0Z" fill="#E3DAC8"/>
+
+                  <!-- Manteau victorien à revers vermillon -->
+                  <path d="M44 188L76 98L140 130L204 98L236 188Z" fill="#171412"/>
+                  <path d="M72 188L96 116L140 142L184 116L208 188Z" fill="#B82518" stroke="#171412" stroke-width="2.5"/>
+                  <path d="M122 134L140 178L158 134L140 124Z" fill="#F6F1E6" stroke="#171412" stroke-width="2"/>
+                  <path d="M135 148a5 5 0 1 0 10 0a5 5 0 1 0-10 0Z" fill="#B82518" stroke="#171412" stroke-width="1.8"/>
+
+                  <!-- Tête du Comte Legacy avec ombrage de hachures -->
+                  <path d="M100 78c0-26 17-45 40-45s40 19 40 45c0 25-16 47-40 47s-40-22-40-47Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.8"/>
+                  <path d="M100 72c0-29 17-43 40-39c23-4 40 10 40 39c-13-17-27-19-40-9c-13-10-27-8-40 9Z" fill="#171412"/>
+                  <path d="M109 69l23 6M171 69l-23 6M110 97l10 6M170 97l-10 6" stroke="#171412" stroke-width="2.4" stroke-linecap="round"/>
+
+                  <!-- Yeux suiveurs du Comte -->
+                  <g class="haunted-eye" data-max-move="5.2">
+                    <path d="M112 83c0-5 5-8 11-8s11 3 11 8s-5 8-11 8s-11-3-11-8Z" fill="#EFE9DC" stroke="#171412" stroke-width="2"/>
+                    <path class="haunted-pupil" d="M118.5 83a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0-9 0Z" fill="#B82518"/>
+                    <path class="haunted-pupil" d="M121 83a2 2 0 1 0 4 0a2 2 0 1 0-4 0Z" fill="#171412"/>
+                  </g>
+                  <g class="haunted-eye" data-max-move="5.2">
+                    <path d="M146 83c0-5 5-8 11-8s11 3 11 8s-5 8-11 8s-11-3-11-8Z" fill="#EFE9DC" stroke="#171412" stroke-width="2"/>
+                    <path class="haunted-pupil" d="M152.5 83a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0-9 0Z" fill="#B82518"/>
+                    <path class="haunted-pupil" d="M155 83a2 2 0 1 0 4 0a2 2 0 1 0-4 0Z" fill="#171412"/>
+                  </g>
+
+                  <!-- Rictus et crocs -->
+                  <path d="M122 108q18 9 36 0" fill="none" stroke="#171412" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M126 110l3.5 10l3.5-8ZM147 112l3.5 8l3.5-10Z" fill="#F6F1E6" stroke="#171412" stroke-width="1.5"/>
+
+                  <!-- Écoinçons memento mori suiveurs -->
+                  <g class="haunted-eye" data-max-move="3">
+                    <path d="M14 154a14 14 0 1 0 28 0a14 14 0 1 0-28 0Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.2"/>
+                    <path d="M20 153a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0ZM31 153a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0Z" fill="#171412"/>
+                    <path class="haunted-pupil" d="M22 153a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0-3 0ZM33 153a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0-3 0Z" fill="#B82518"/>
+                  </g>
+                  <g class="haunted-eye" data-max-move="3">
+                    <path d="M238 154a14 14 0 1 0 28 0a14 14 0 1 0-28 0Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.2"/>
+                    <path d="M244 153a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0ZM255 153a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0Z" fill="#171412"/>
+                    <path class="haunted-pupil" d="M246 153a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0-3 0ZM257 153a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0-3 0Z" fill="#B82518"/>
+                  </g>
+
+                  <!-- Couche Rayons X d'orage (apparaît au coup de tonnerre) -->
+                  <g class="xray-layer">
+                    <rect width="280" height="188" fill="#171412"/>
+                    <path d="M96 76c0-26 19-45 44-45s44 19 44 45c0 26-19 48-44 48s-44-22-44-48Z" fill="#F6F1E6" stroke="#E3DAC8" stroke-width="2"/>
+                    <path d="M112 70a13 13 0 1 0 26 0a13 13 0 1 0-26 0ZM142 70a13 13 0 1 0 26 0a13 13 0 1 0-26 0Z" fill="#171412"/>
+                    <path d="M121 70a4 4 0 1 0 8 0a4 4 0 1 0-8 0ZM151 70a4 4 0 1 0 8 0a4 4 0 1 0-8 0Z" fill="#B82518"/>
+                    <path d="M136 84l-5 12h18Z" fill="#171412"/>
+                    <path d="M114 104q26 12 52 0" stroke="#171412" stroke-width="4" fill="none"/>
+                    <path d="M120 106v8M128 106v8M136 106v8M144 106v8M152 106v8M160 106v8" stroke="#171412" stroke-width="2.5"/>
+                  </g>
+                </svg>
+              </div>
+
+              <div class="portrait-nameplate">
+                <strong>Comte Legacy de Monolithe (1894 à 2026)</strong>
+                <span>Inventeur de la mise en production du vendredi à 17 h 59</span>
+              </div>
+              <p id="portrait-quote" class="portrait-quote">
+                « Bougez donc cette main osseuse : j’observe chacun de vos commits sans tests. »
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTE II : L'APOTHICAIRERIE -->
+      <section id="zone-chaudron" class="act-section" aria-labelledby="title-zone-2">
+        <div class="act-head">
+          <h2 id="title-zone-2">L’Apothicairerie des mises en prod</h2>
+          <p>
+            Versez deux ingrédients du registre dans la fonte.
+          </p>
+        </div>
+
+        <div class="cauldron-grid">
+          <div class="ingredients-list" role="group" aria-label="Registre des ingrédients maudits">
+            <button type="button" class="ingredient-btn" data-ing="toad" data-label="Bave de crapaud">
+              <span class="ing-num">I.</span>
+              <span class="ing-text">
+                <strong>Bave de crapaud millésimée 1897</strong>
+                <small>Base visqueuse certifiée conforme aux anciens grimoires</small>
+              </span>
+              <span class="ing-stamp">Verser</span>
+            </button>
+
+            <button type="button" class="ingredient-btn" data-ing="spider" data-label="Araignée du grenier">
+              <span class="ing-num">II.</span>
+              <span class="ing-text">
+                <strong>Araignée velue des combles</strong>
+                <small>Huit pattes véloces, aucune documentation d’architecture</small>
+              </span>
+              <span class="ing-stamp">Verser</span>
+            </button>
+
+            <button type="button" class="ingredient-btn" data-ing="gitpush" data-label="git push --force">
+              <span class="ing-num">III.</span>
+              <span class="ing-text">
+                <strong><code>git push --force</code> sur la branche principale</strong>
+                <small>Glace le sang des architectes dans un rayon de douze lieues</small>
+              </span>
+              <span class="ing-stamp">Verser</span>
+            </button>
+
+            <button type="button" class="ingredient-btn" data-ing="linkedin" data-label="Recruteur Java">
+              <span class="ing-num">IV.</span>
+              <span class="ing-text">
+                <strong>Missive LinkedIn : « Superbe profil Java ! »</strong>
+                <small>Adressée à un développeur .NET et React écrit en corps 72</small>
+              </span>
+              <span class="ing-stamp">Verser</span>
+            </button>
+
+            <button type="button" class="ingredient-btn" data-ing="calcium" data-label="Poudre d’os">
+              <span class="ing-num">V.</span>
+              <span class="ing-text">
+                <strong>Poudre d’os et calcium pur</strong>
+                <small>Attire immanquablement les squelettes joueurs de cuivre</small>
+              </span>
+              <span class="ing-stamp">Verser</span>
+            </button>
+          </div>
+
+          <div class="cauldron-stage collider-box">
+            <svg id="witch-cauldron" viewBox="0 0 260 224" aria-label="Marmite alchimique en fonte sur braises">
+              <!-- Bûches et braises xylographiques -->
+              <path d="M48 214h164M58 206l144 10" stroke="#171412" stroke-width="8" stroke-linecap="round"/>
+              <path d="M66 210c12-28 24-8 34-26c12 22 24-18 30-28c8 14 18 44 30 24c10 18 22 0 34 30Z" fill="#B82518" stroke="#171412" stroke-width="2.2"/>
+              <path d="M88 210c10-16 18-4 26-16c8 12 16-8 20-16c6 10 12 26 20 14c8 10 14 2 20 18Z" fill="#DF7A2E" stroke="#171412" stroke-width="1.8"/>
+
+              <!-- Vapeurs alchimiques en volutes d'encre -->
+              <path d="M96 66c-6-10 6-18 0-28M132 60c-6-12 8-20 0-32M164 68c-5-10 6-16 0-26" fill="none" stroke="#171412" stroke-width="2.4" stroke-linecap="round"/>
+
+              <!-- Pattes de lion et panse en fonte ciselée -->
+              <path d="M74 180l-16 28M186 180l16 28" stroke="#171412" stroke-width="10" stroke-linecap="round"/>
+              <path d="M46 138c0-34 37-58 84-58s84 24 84 58c0 36-37 60-84 60s-84-24-84-60Z" fill="#171412"/>
+              <!-- Anneaux de portage forgés -->
+              <path d="M38 120a12 12 0 1 0 24 0a12 12 0 1 0-24 0ZM198 120a12 12 0 1 0 24 0a12 12 0 1 0-24 0Z" fill="none" stroke="#F6F1E6" stroke-width="4"/>
+
+              <!-- Hachures de fonte et rebord à gorge -->
+              <path d="M68 126q-6 26 18 46M82 134q-4 20 14 36" fill="none" stroke="#F6F1E6" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M54 88c0-10 34-18 76-18s76 8 76 18s-34 18-76 18s-76-8-76-18Z" fill="#4E463E" stroke="#171412" stroke-width="3.2"/>
+
+              <!-- Bouillon alchimique et oeil flottant suiveur -->
+              <path id="cauldron-liquid" d="M64 88c0-7 30-12 66-12s66 5 66 12s-30 12-66 12s-66-5-64-12Z" fill="#3B4D2B"/>
+              <g class="haunted-eye" data-max-move="4.4">
+                <path d="M118 87a12 12 0 1 0 24 0a12 12 0 1 0-24 0Z" fill="#F6F1E6" stroke="#171412" stroke-width="2.2"/>
+                <path class="haunted-pupil" d="M125 87a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0-9 0Z" fill="#B82518"/>
+                <path class="haunted-pupil" d="M127.5 87a2 2 0 1 0 4 0a2 2 0 1 0-4 0Z" fill="#171412"/>
+              </g>
+            </svg>
+
+            <p id="cauldron-status" class="cauldron-status">
+              Marmite tiède. Sélectionnez deux ingrédients du registre.
+            </p>
+
+            <button type="button" id="btn-brew-potion" class="btn-primary">
+              Touiller la décoction
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTE III : LE CIMETIÈRE DES PROJETS -->
+      <section id="zone-cimetiere" class="act-section" aria-labelledby="title-zone-3">
+        <div class="act-head">
+          <h2 id="title-zone-3">Le Cimetière des projets abandonnés</h2>
+          <p>
+            Frappez une stèle pour exhumer la dette technique.
+          </p>
+        </div>
+
+        <div class="cemetery-grid">
+          <!-- Stèle I -->
+          <article class="tombstone-card collider-box clickable-trap" data-tomb="ie" role="button" tabindex="0">
+            <!-- Fronton gravé : Sablier brisé & Toile -->
+            <svg class="tomb-emblem" viewBox="0 0 52 36" aria-hidden="true">
+              <path d="M14 6h24M14 30h24M18 6L34 30M34 6L18 30" stroke="#171412" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M26 18l6-6M26 18l-6 6" stroke="#B82518" stroke-width="1.8"/>
+            </svg>
+            <span class="tomb-num">Stèle I</span>
+            <h3>Internet Explorer</h3>
+            <span class="tomb-dates">1995 à 2022 (présumé)</span>
+            <p class="tomb-epitaph">
+              « Charge encore l’avis de ses propres funérailles. »
+            </p>
+            <div class="tomb-reaction">Frapper la pierre</div>
+            <!-- Main anatomique Posada à cinq phalanges -->
+            <svg class="zombie-hand" viewBox="0 0 56 64" aria-hidden="true">
+              <path d="M24 64V36M32 64V36" stroke="#171412" stroke-width="7" stroke-linecap="round"/>
+              <path d="M24 64V36M32 64V36" stroke="#F6F1E6" stroke-width="3" stroke-linecap="round"/>
+              <!-- Phalanges articulées -->
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#171412" stroke-width="6" stroke-linecap="round"/>
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#F6F1E6" stroke-width="2.6" stroke-linecap="round"/>
+            </svg>
+          </article>
+
+          <!-- Stèle II -->
+          <article class="tombstone-card collider-box clickable-trap" data-tomb="sideproject" role="button" tabindex="0">
+            <!-- Fronton gravé : Croissant de lune & Chandelle de minuit -->
+            <svg class="tomb-emblem" viewBox="0 0 52 36" aria-hidden="true">
+              <path d="M22 8a12 12 0 1 0 16 16a10 10 0 1 1-16-16Z" fill="#171412"/>
+              <rect x="28" y="16" width="6" height="12" fill="#B82518"/>
+            </svg>
+            <span class="tomb-num">Stèle II</span>
+            <h3>Projet nocturne de 2 h</h3>
+            <span class="tomb-dates">Domaine renouvelé trois ans</span>
+            <p class="tomb-epitaph">
+              « Promis, je publie la première version dimanche soir. »
+            </p>
+            <div class="tomb-reaction">Frapper la pierre</div>
+            <svg class="zombie-hand" viewBox="0 0 56 64" aria-hidden="true">
+              <path d="M24 64V36M32 64V36" stroke="#171412" stroke-width="7" stroke-linecap="round"/>
+              <path d="M24 64V36M32 64V36" stroke="#F6F1E6" stroke-width="3" stroke-linecap="round"/>
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#171412" stroke-width="6" stroke-linecap="round"/>
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#F6F1E6" stroke-width="2.6" stroke-linecap="round"/>
+            </svg>
+          </article>
+
+          <!-- Stèle III -->
+          <article class="tombstone-card collider-box clickable-trap" data-tomb="jira" role="button" tabindex="0">
+            <!-- Fronton gravé : Roue d'engrenage & Sceau 666 -->
+            <svg class="tomb-emblem" viewBox="0 0 52 36" aria-hidden="true">
+              <path d="M16 18a10 10 0 1 0 20 0a10 10 0 1 0-20 0Z" fill="none" stroke="#171412" stroke-width="2.6"/>
+              <path d="M26 4v6M26 26v6M14 18h6M32 18h6" stroke="#B82518" stroke-width="2.2"/>
+            </svg>
+            <span class="tomb-num">Stèle III</span>
+            <h3>Ticket Jira n° 666</h3>
+            <span class="tomb-dates">Estimé à quinze minutes en 2021</span>
+            <p class="tomb-epitaph">
+              « A survécu à quatre refontes et trois chefs de projet. »
+            </p>
+            <div class="tomb-reaction">Frapper la pierre</div>
+            <svg class="zombie-hand" viewBox="0 0 56 64" aria-hidden="true">
+              <path d="M24 64V36M32 64V36" stroke="#171412" stroke-width="7" stroke-linecap="round"/>
+              <path d="M24 64V36M32 64V36" stroke="#F6F1E6" stroke-width="3" stroke-linecap="round"/>
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#171412" stroke-width="6" stroke-linecap="round"/>
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#F6F1E6" stroke-width="2.6" stroke-linecap="round"/>
+            </svg>
+          </article>
+
+          <!-- Stèle IV -->
+          <article class="tombstone-card collider-box clickable-trap" data-tomb="prod" role="button" tabindex="0">
+            <!-- Fronton gravé : Cylindre de base fendu & Éclair -->
+            <svg class="tomb-emblem" viewBox="0 0 52 36" aria-hidden="true">
+              <path d="M16 10c0-3 5-6 10-6s10 3 10 6v16c0 3-5 6-10 6s-10-3-10-6Z" fill="none" stroke="#171412" stroke-width="2.4"/>
+              <path d="M28 4l-4 12h6l-4 14" stroke="#B82518" stroke-width="2" fill="none"/>
+            </svg>
+            <span class="tomb-num">Stèle IV</span>
+            <h3>Base sans sauvegarde</h3>
+            <span class="tomb-dates">Nuit de pleine lune</span>
+            <p class="tomb-epitaph">
+              « <code>DELETE FROM users;</code> lancé sans clause <code>WHERE</code>. »
+            </p>
+            <div class="tomb-reaction">Frapper la pierre</div>
+            <svg class="zombie-hand" viewBox="0 0 56 64" aria-hidden="true">
+              <path d="M24 64V36M32 64V36" stroke="#171412" stroke-width="7" stroke-linecap="round"/>
+              <path d="M24 64V36M32 64V36" stroke="#F6F1E6" stroke-width="3" stroke-linecap="round"/>
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#171412" stroke-width="6" stroke-linecap="round"/>
+              <path d="M16 38L10 18M22 35L20 10M28 35L28 8M34 35L36 12M40 38L48 20" stroke="#F6F1E6" stroke-width="2.6" stroke-linecap="round"/>
+            </svg>
+          </article>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ACTE IV : LA CAVE SCELLÉE & L'ATTESTATION NOTARIÉE (Plein Champ Noir d'Encre) -->
+    <section id="zone-crypte" class="crypt-band" aria-labelledby="title-zone-4">
+      <div class="broadsheet-wrap">
+        <div class="act-head">
+          <h2 id="title-zone-4">La Cave scellée et l’Attestation</h2>
+          <p>
+            Trois chaînes scellent l’unique sursaut du domaine.
+          </p>
+        </div>
+
+        <div class="crypt-grid">
+          <div class="coffin-box collider-box">
+            <p class="coffin-warning">Avis formel : sursaut plein écran au troisième verrou</p>
+
+            <div id="red-coffin-wrap" class="coffin-svg-wrap" role="button" tabindex="0" aria-label="Cercueil vermillon scellé par trois chaînes">
+              <svg viewBox="0 0 180 250" aria-hidden="true">
+                <!-- Châssis de chêne verni vermillon & ferrures d'angle -->
+                <polygon points="54,10 126,10 164,76 134,240 46,240 16,76" fill="#87190F" stroke="#F6F1E6" stroke-width="3.2"/>
+                <polygon points="62,22 118,22 148,78 122,228 58,228 32,78" fill="#B82518" stroke="#120F0D" stroke-width="3"/>
+                <!-- Nervures et hachures de fil de bois -->
+                <path d="M72 24v202M108 24v202M90 24v202" stroke="#87190F" stroke-width="1.8"/>
+                <path d="M90 52v80M66 78h48" stroke="#F6F1E6" stroke-width="6.5" stroke-linecap="round"/>
+                <!-- Crâne gravé au coeur de la croix -->
+                <path d="M84 72a6 6 0 1 0 12 0a6 6 0 1 0-12 0Z" fill="#F6F1E6"/>
+
+                <!-- Trois chaînes de fer forgé à gros maillons et cadenas -->
+                <g class="coffin-chain-line" data-chain="1">
+                  <path d="M16 68L164 86" stroke="#120F0D" stroke-width="12"/>
+                  <path d="M16 68L164 86" stroke="#EFE9DC" stroke-width="6.5" stroke-dasharray="9 6"/>
+                  <rect x="79" y="66" width="22" height="24" fill="#EFE9DC" stroke="#120F0D" stroke-width="2.6"/>
+                  <path d="M87 74a3 3 0 1 0 6 0a3 3 0 1 0-6 0Zm3 3v5" stroke="#120F0D" stroke-width="2" fill="none"/>
+                </g>
+
+                <g class="coffin-chain-line" data-chain="2">
+                  <path d="M22 138L158 122" stroke="#120F0D" stroke-width="12"/>
+                  <path d="M22 138L158 122" stroke="#EFE9DC" stroke-width="6.5" stroke-dasharray="9 6"/>
+                  <rect x="79" y="118" width="22" height="24" fill="#EFE9DC" stroke="#120F0D" stroke-width="2.6"/>
+                  <path d="M87 126a3 3 0 1 0 6 0a3 3 0 1 0-6 0Zm3 3v5" stroke="#120F0D" stroke-width="2" fill="none"/>
+                </g>
+
+                <g class="coffin-chain-line" data-chain="3">
+                  <path d="M34 190L146 198" stroke="#120F0D" stroke-width="12"/>
+                  <path d="M34 190L146 198" stroke="#EFE9DC" stroke-width="6.5" stroke-dasharray="9 6"/>
+                  <rect x="79" y="182" width="22" height="24" fill="#EFE9DC" stroke="#120F0D" stroke-width="2.6"/>
+                  <path d="M87 190a3 3 0 1 0 6 0a3 3 0 1 0-6 0Zm3 3v5" stroke="#120F0D" stroke-width="2" fill="none"/>
+                </g>
+              </svg>
+            </div>
+
+            <p id="coffin-status" class="coffin-status">
+              Trois chaînes intactes. Le couvercle demeure immobile.
+            </p>
+
+            <button type="button" id="btn-hit-coffin" class="btn-crypt">
+              Briser la première chaîne (1/3)
+            </button>
+
+            <label class="flash-opt-out">
+              <input type="checkbox" id="chk-no-flash">
+              <span>Désactiver l’effet stroboscopique</span>
+            </label>
+          </div>
+
+          <div class="certificate-panel">
+            <h3>Attestation notariée de survie</h3>
+            <p>
+              Imprimée d’après vos actes pour votre billet LinkedIn :
+            </p>
+
+            <div class="signatory-row">
+              <label for="cert-visitor-name">Signataire :</label>
+              <input type="text" id="cert-visitor-name" maxlength="32" placeholder="Votre nom ou pseudonyme">
+            </div>
+
+            <canvas id="cert-preview-canvas" width="1200" height="630" aria-label="Aperçu du diplôme notarié de survie du Manoir"></canvas>
+
+            <div class="cert-actions">
+              <button type="button" id="btn-download-cert" class="btn-primary">
+                Télécharger l’estampe (.PNG)
+              </button>
+              <button type="button" id="btn-copy-linkedin" class="btn-secondary">
+                Copier le résumé LinkedIn
+              </button>
+            </div>
+            <p id="copy-feedback" class="copy-feedback" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <footer class="portfolio-footer">
+          <div class="author-bio">
+            <strong>Rayan Mazouni</strong>
+            <p>
+              Développeur Full-Stack (.NET et React), architecture logicielle.
+            </p>
+          </div>
+          <div class="author-colophon">
+            Zéro dépendance externe : physique Canvas 2D, gravures SVG et synthétiseur Web Audio.
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       5. MODALE D'APPARITION D'APOTHICAIRERIE (#cartoon-scare-modal)
+       ======================================================================== -->
+  <div id="cartoon-scare-modal" class="scare-modal" role="dialog" aria-modal="true" aria-labelledby="cartoon-scare-title" hidden>
+    <div class="cartoon-scare-card">
+      <div id="cartoon-scare-art" class="cartoon-scare-art"></div>
+      <h3 id="cartoon-scare-title">Apparition</h3>
+      <p id="cartoon-scare-text"></p>
+      <button type="button" id="btn-close-cartoon-scare" class="btn-primary">
+        Refermer la planche
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       6. SURSAUT PLEIN ÉCRAN DU CERCUEIL VERMILLON (Nosferatu Doré / Posada)
+       ======================================================================== -->
+  <div id="real-jumpscare-overlay" role="dialog" aria-modal="true" aria-label="Apparition du Cercueil Vermillon" hidden>
+    <div id="jumpscare-monster-stage">
+      <svg class="monster-lunge" viewBox="0 0 440 440" aria-hidden="true">
+        <!-- Rayons de choc xylographiques remplissant tout le champ -->
+        <g stroke="#B82518" stroke-width="4">
+          <line x1="220" y1="20" x2="220" y2="70"/>
+          <line x1="360" y1="80" x2="320" y2="120"/>
+          <line x1="420" y1="220" x2="370" y2="220"/>
+          <line x1="360" y1="360" x2="320" y2="320"/>
+          <line x1="220" y1="420" x2="220" y2="370"/>
+          <line x1="80" y1="360" x2="120" y2="320"/>
+          <line x1="20" y1="220" x2="70" y2="220"/>
+          <line x1="80" y1="80" x2="120" y2="120"/>
+        </g>
+        <!-- Oreilles démoniaques membraneuses veinées -->
+        <polygon points="68,162 10,24 130,94" fill="#B82518" stroke="#F6F1E6" stroke-width="4"/>
+        <polygon points="372,162 430,24 310,94" fill="#B82518" stroke="#F6F1E6" stroke-width="4"/>
+        <path d="M48 88L110 112M392 88L330 112" stroke="#120F0D" stroke-width="3"/>
+
+        <!-- Tête d'écorché / Nosferatu ciselée -->
+        <path d="M88 184c0-78 58-138 132-138s132 60 132 138c0 78-54 152-132 152S88 262 88 184Z" fill="#F6F1E6" stroke="#120F0D" stroke-width="7"/>
+        <path d="M116 236q104 172 208 0Z" fill="#120F0D" stroke="#B82518" stroke-width="5"/>
+
+        <!-- Quatorze crocs déchiquetés acérés -->
+        <polygon points="132,237 148,304 164,238" fill="#F6F1E6"/>
+        <polygon points="170,238 184,284 198,239" fill="#F6F1E6"/>
+        <polygon points="204,239 218,284 232,239" fill="#F6F1E6"/>
+        <polygon points="238,239 252,284 266,238" fill="#F6F1E6"/>
+        <polygon points="272,238 288,304 304,237" fill="#F6F1E6"/>
+        <polygon points="152,332 166,286 180,340" fill="#EFE9DC"/>
+        <polygon points="244,340 258,286 272,332" fill="#EFE9DC"/>
+
+        <!-- Orbites profondes et prunelles de sang incandescentes -->
+        <path d="M120 166c0-25 18-45 40-45s40 20 40 45s-18 45-40 45s-40-20-40-45ZM240 166c0-25 18-45 40-45s40 20 40 45s-18 45-40 45s-40-20-40-45Z" fill="#120F0D"/>
+        <path d="M142 168a18 18 0 1 0 36 0a18 18 0 1 0-36 0ZM262 168a18 18 0 1 0 36 0a18 18 0 1 0-36 0Z" fill="#B82518"/>
+        <path d="M152 168a7 7 0 1 0 14 0a7 7 0 1 0-14 0ZM272 168a7 7 0 1 0 14 0a7 7 0 1 0-14 0Z" fill="#DF7A2E"/>
+        <path d="M157 168a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0ZM277 168a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0Z" fill="#F6F1E6"/>
+
+        <!-- Rides de fureur et sutures frontales -->
+        <path d="M114 110l88 34M326 110l-88 34" stroke="#120F0D" stroke-width="10" stroke-linecap="round"/>
+        <path d="M190 64q30-10 60 0M200 84q20-6 40 0" stroke="#B82518" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div id="relief-card" class="relief-card" hidden>
+      <h3>Respirez, fausse alerte.</h3>
+      <p>
+        Ce n’était pas une goule, seulement une invitation Teams intitulée
+        <em>« Point rapide sans ordre du jour »</em> posée un vendredi à <strong>17 h 58</strong>.
+      </p>
+      <p>
+        La mention « Survivant du Cercueil Vermillon » figure désormais sur votre diplôme.
+      </p>
+      <button type="button" id="btn-close-relief" class="btn-primary">
+        Consulter mon attestation
+      </button>
+    </div>
+  </div>
+
+  <script defer src="audio-synth.js"></script>
+  <script defer src="physics-skeletons.js"></script>
+  <script defer src="mansion-gags.js"></script>
+</body>
+</html>
